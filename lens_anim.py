@@ -37,7 +37,7 @@ def get_lightcurve_flux(phase, shape_param, amplitude=1.0):
     wave_sin = np.sin(t)
     
     # Sawtooth Wave (width=1.0 is pure saw)
-    wave_saw = signal.sawtooth(t, width=1.0)
+    wave_saw = signal.sawtooth(t, width=0.1)
     
     # Linear interpolation
     combined_wave = (1 - shape_param) * wave_sin + shape_param * wave_saw
