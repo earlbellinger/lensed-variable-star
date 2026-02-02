@@ -148,7 +148,7 @@ def render_plots(phase):
     observed_image = base_intensity * flux_map
 
     # Lightcurve Plot Data
-    lc_phases = np.linspace(0, 2, 200)
+    lc_phases = np.linspace(0, 3, 200)
     lc_fluxes = get_lightcurve_flux(lc_phases, shape_param, amplitude)
     
     # Counter-image delay (heuristic for plotting the blue line)
@@ -164,6 +164,7 @@ def render_plots(phase):
     ax1.plot(lc_phases, lc_fluxes, color='#FF4B4B', lw=2, label='Intrinsic Lightcurve')
     ax1.axvline(phase % 1.0, color='white', linestyle='--', alpha=0.8, label='Source Phase')
     ax1.axvline((phase % 1.0) + 1.0, color='white', linestyle='--', alpha=0.8) # Repeat for 2nd cycle visual
+    ax1.axvline((phase % 1.0) + 2.0, color='white', linestyle='--', alpha=0.8) # Repeat for 3rd cycle visual
 
     # Counter image line
     if theta_E > 0:
@@ -171,7 +172,9 @@ def render_plots(phase):
          dp_plot = delayed_phase % 1.0
          ax1.axvline(dp_plot, color='#4B4BFF', linestyle=':', lw=2, label='Delayed Image')
          ax1.axvline(dp_plot + 1.0, color='#4B4BFF', linestyle=':', lw=2)
+         ax1.axvline(dp_plot + 2.0, color='#4B4BFF', linestyle=':', lw=2)
 
+    ax1.set_xlim([0, 3])
     ax1.set_title("Intrinsic Lightcurve", color='white')
     ax1.set_facecolor('#0e1117')
     ax1.tick_params(colors='white')
