@@ -15,10 +15,11 @@ GRID_SIZE = 2.0
 LENS_DIST = 4.0
 SOURCE_DIST = 8.0
 SRC_Y = 0.1          # Y stays fixed
-SRC_X_START = -0.5   # X moves from here...
-SRC_X_END = 0.5      # ...to here
+SRC_X_START = -2.05   # X moves from here...
+SRC_X_END = 2.05      # ...to here
 SHAPE_PARAM = 0.7 
 AMPLITUDE = 1.5
+CYCLES = 10.0
 
 # Setup Plot Style
 plt.style.use('dark_background')
@@ -72,10 +73,10 @@ beta_y = yy - alpha_y
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4), gridspec_kw={'width_ratios': [1.5, 1]})
 
 # Left Panel: Lightcurve
-lc_phases = np.linspace(0, 3, 300)
+lc_phases = np.linspace(0, CYCLES, 300)
 lc_fluxes = get_lightcurve_flux(lc_phases, SHAPE_PARAM, AMPLITUDE)
 ax1.plot(lc_phases, lc_fluxes, color='#FF4B4B', lw=2, label='Intrinsic Source')
-ax1.set_xlim(0, 3)
+ax1.set_xlim(0, CYCLES)
 ax1.set_ylim(0, 2.0)
 ax1.set_xlabel("Pulsation Phase")
 ax1.set_ylabel("Relative Flux")
@@ -107,8 +108,8 @@ def update(frame):
     # Move the Source X from Start to End
     current_src_x = SRC_X_START + (SRC_X_END - SRC_X_START) * progress
     
-    # Global Phase (0 to 3 cycles)
-    global_phase = progress * 3.0 
+    # Global Phase (0 to CYCLES cycles)
+    global_phase = progress * CYCLES 
 
     # 2. Recalculate Source Profile (The shape of the ring changes as source moves)
     source_radius = 0.15
@@ -136,13 +137,13 @@ def update(frame):
     source_marker.set_data([current_src_x], [SRC_Y]) # Update green circle pos
 
     # Update Graph Lines
-    current_x = global_phase % 3.0
+    current_x = global_phase % CYCLES
     line_curr_phase.set_xdata([current_x])
     
     # Calculate average delay for the active pixels to move the blue line
     if np.any(base_intensity > 0.01):
         avg_delay = np.mean(time_delay_map[base_intensity > 0.01])
-        delayed_x = (global_phase - avg_delay) % 3.0
+        delayed_x = (global_phase - avg_delay) % CYCLES
         line_delayed.set_xdata([delayed_x])
     
     return im_plot, line_curr_phase, line_delayed, source_marker
